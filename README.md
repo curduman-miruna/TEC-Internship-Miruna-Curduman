@@ -12,6 +12,19 @@ Database diagram: <br>
 9. Having too much time on your hands? Do any kind of improvements you wish. Just let us know via e-mail once you send the link with your repository what improvements you've done.
     
 V1
+    The user can perform all CRUD (Create, Read, Update, Delete) operations on Person entities. (Tasks: 1, 2, 3)
+    The user can create and update person information. (Tasks: 3, 4 combined)
+    The user can perform all CRUD operations on Salary entities. (Task: 4)
+    The user can perform all CRUD operations on Department entities. (Task: 6)
+    The API port is configured in the appsettings.json file (Task: 7).
+    (Task: 8)
+    Token-based authentication using the Bearer scheme is implemented. A token is generated upon user login, and all operations require authorization (user logged in). 
+    Login and registration functionalities are implemented for Admin users.
 
-V2
+V2 (Improvements over V1)
+    (Task 9)
+    Combined the Person and Person Details tables as they represent the same entity.
+    Streamlined Admin information by keeping only necessary fields.
+    Implemented logout functionality for Admin users.
+    Added logging for the API application.
 
