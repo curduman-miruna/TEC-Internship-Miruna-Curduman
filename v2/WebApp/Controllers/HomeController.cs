@@ -58,7 +58,6 @@ namespace WebApp.Controllers
                 }
                 else
                 {
-                    // Extract error message from the response
                     var errorContent = await message.Content.ReadAsStringAsync();
                     ModelState.AddModelError(string.Empty, $"Invalid login attempt: {errorContent}");
                 }

@@ -101,7 +101,6 @@ namespace WebApp.Controllers
                     person.Position.Department = JsonConvert.DeserializeObject<Department>(departmentJson);
                 }
 
-                // Fetch and populate Salary object
                 message = await client.GetAsync($"{_api}/salaries/{person.SalaryId}");
                 if (message.IsSuccessStatusCode)
                 {
@@ -168,7 +167,6 @@ namespace WebApp.Controllers
                     person.Position.Department = JsonConvert.DeserializeObject<Department>(departmentJson);
                 }
 
-                // Fetch and populate Salary object
                 message = await client.GetAsync($"{_api}/salaries/{person.SalaryId}");
                 if (message.IsSuccessStatusCode)
                 {

@@ -40,9 +40,9 @@ namespace WebApp
             services.AddDistributedMemoryCache();
             services.AddSession(options =>
             {
-                options.IdleTimeout = TimeSpan.FromMinutes(30); // Sets the timeout for the session.
-                options.Cookie.HttpOnly = true; // Makes the session cookie accessible only to the server.
-                options.Cookie.IsEssential = true; // Ensures the session cookie is essential and not subject to consent policy.
+                options.IdleTimeout = TimeSpan.FromMinutes(180);
+                options.Cookie.HttpOnly = true;
+                options.Cookie.IsEssential = true; 
             });
         }
 

@@ -90,9 +90,9 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
-app.UseAuthentication(); // Add authentication middleware
-app.UseAuthorization();  // Add authorization middleware
+app.UseAuthentication();
+app.UseAuthorization();  
 
-app.MapControllers(); // Map controllers to routes
+app.MapControllers(); 
 
 app.Run();
