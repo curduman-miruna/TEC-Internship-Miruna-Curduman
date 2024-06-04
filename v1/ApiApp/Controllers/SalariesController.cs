@@ -61,5 +61,20 @@ namespace Internship.Controllers
             else
                 return BadRequest();
         }
+
+        [HttpPut]
+        public IActionResult Update(Salary salary)
+        {
+            if (ModelState.IsValid)
+            {
+                var db = new APIDbContext();
+                Salary updateSalary = db.Salaries.Find(salary.SalaryId);
+                updateSalary.Amount = salary.Amount;
+                db.SaveChanges();
+                return NoContent();
+            }
+            else
+                return BadRequest();
+        }
     }
 }

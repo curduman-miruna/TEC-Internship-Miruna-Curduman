@@ -4,12 +4,10 @@ using Microsoft.Extensions.Logging;
 using System.Threading.Tasks;
 using System.Diagnostics;
 using WebApp.Models.Auth;
-using Azure.Core;
 using System.Net.Http;
 using Newtonsoft.Json;
 using System.Net.Http.Json;
 using Microsoft.Extensions.Configuration;
-using Azure;
 using Microsoft.AspNetCore.Http;
 
 namespace WebApp.Controllers
@@ -29,6 +27,7 @@ namespace WebApp.Controllers
 
         public IActionResult Index()
         {
+            ViewBag.IsUserLoggedIn = IsUserLoggedIn();
             return View();
         }
 
@@ -98,6 +97,18 @@ namespace WebApp.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        public IActionResult Logout()
+        {
+            HttpContext.Session.Remove("Token");
+            return RedirectToAction("Auth", "Home");
+        }
+
+        public bool IsUserLoggedIn()
+        {
+            var token = HttpContext.Session.Get("Token");
+            return token != null;
         }
     }
 }

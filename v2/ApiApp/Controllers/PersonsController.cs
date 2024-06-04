@@ -4,6 +4,7 @@ using Internship.ObjectModel;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using NLog;
 using System.Threading.Tasks;
 
 namespace Internship.Controllers
@@ -13,9 +14,11 @@ namespace Internship.Controllers
     [ApiController]
     public class PersonsController : ControllerBase
     {
+        private static readonly Logger _logger = LogManager.GetCurrentClassLogger();
         [HttpGet]
         public IActionResult Get()
         {
+            _logger.Info("Get all persons");
             var db = new APIDbContext();
             var list = db.Persons.Include(x => x.Salary).Include(x => x.Position)
                    .Select(x => new PersonInformation()
@@ -32,22 +35,31 @@ namespace Internship.Controllers
         [HttpGet("{Id}")]
         public IActionResult Get(int Id)
         {
+            if (Id == 0)
+            {
+                _logger.Warn($"Invalid Id: {Id}");
+                return BadRequest();
+            }
             var db = new APIDbContext();
             Person person = db.Persons.FirstOrDefault(x => x.Id == Id);
             if (person == null)
+            {
+                _logger.Warn($"Person with Id {Id} not found");
                 return NotFound();
-            else
-                return Ok(person);
+            }
+
+            var dataAsJson = Newtonsoft.Json.JsonConvert.SerializeObject(person);
+            _logger.Info($"Person with Id {Id} found: {dataAsJson}");
+            return Ok(person);
         }
 
         [HttpPost]
         public async Task<IActionResult> Add(Person person)
         {
             var db = new APIDbContext();
-            if (!ModelState.IsValid)
-                return BadRequest();
 
             var existingPosition = await db.Positions.FindAsync(person.PositionId);
+            var existingDepartment = await db.Departments.FindAsync(person.Position.DepartmentId);
             var existingSalary = await db.Salaries.FindAsync(person.SalaryId);
 
             if (existingPosition != null)
@@ -56,6 +68,18 @@ namespace Internship.Controllers
             if (existingSalary != null)
                 person.Salary = existingSalary;
 
+            if (existingDepartment != null)
+                person.Position.Department = existingDepartment;
+
+            if (!ModelState.IsValid)
+            {
+                var dataAsJson = Newtonsoft.Json.JsonConvert.SerializeObject(person);
+                _logger.Warn($"Invalid person data: {dataAsJson}");
+                return BadRequest();
+            }
+
+            var personAsJson = Newtonsoft.Json.JsonConvert.SerializeObject(person);
+            _logger.Info($"Adding new person: {personAsJson}");
             db.Persons.Add(person);
             await db.SaveChangesAsync();
             return Created("", person);
@@ -66,11 +90,18 @@ namespace Internship.Controllers
         {
             var db = new APIDbContext();
             if (!ModelState.IsValid)
+            {
+                var dataAsJson = Newtonsoft.Json.JsonConvert.SerializeObject(person);
+                _logger.Warn($"Bad Request. Invalid person data: {dataAsJson}");
                 return BadRequest();
+            }
 
             var updatePerson = await db.Persons.FindAsync(person.Id);
             if (updatePerson == null)
+            {
+                _logger.Warn($"Person with Id {person.Id} not found");
                 return NotFound();
+            }
 
             updatePerson.Address = person.Address;
             updatePerson.Age = person.Age;
@@ -82,6 +113,8 @@ namespace Internship.Controllers
             updatePerson.BirthDay = person.BirthDay;
             updatePerson.City = person.City;
 
+            var personAsJson = Newtonsoft.Json.JsonConvert.SerializeObject(person);
+            _logger.Info($"Updating person with Id {person.Id}: {personAsJson}");
             await db.SaveChangesAsync();
             return NoContent();
         }
@@ -91,14 +124,22 @@ namespace Internship.Controllers
         {
             var db = new APIDbContext();
             if (Id <= 0)
+            {
+                _logger.Warn($"Invalid Id: {Id}");
                 return BadRequest();
+            }
 
             var person = await db.Persons.FindAsync(Id);
             if (person == null)
+            {
+                _logger.Warn($"Person with Id {Id} not found");
                 return NotFound();
+            }
 
             db.Persons.Remove(person);
             await db.SaveChangesAsync();
+
+            _logger.Info($"Person with Id {Id} deleted");
             return NoContent();
         }
     }

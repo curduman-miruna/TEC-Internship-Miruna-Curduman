@@ -8,6 +8,7 @@
 
 <form method="post" asp-action="Update">
     <div class="form-group">
+        <input asp-for="SalaryId" hidden />
         <label asp-for="Amount" class="control-label">Amount</label>
         <input asp-for="Amount" class="form-control" />
         <span asp-validation-for="Amount" class="text-danger"></span>

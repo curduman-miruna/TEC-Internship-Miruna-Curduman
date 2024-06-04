@@ -82,5 +82,49 @@ namespace WebApp.Controllers
             }
             return View();
         }
+
+        public async Task<IActionResult> Update(int Id)
+        {
+            var token = HttpContext.Session.GetString("Token");
+            using (HttpClient client = new HttpClient())
+            {
+                client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                HttpResponseMessage message = await client.GetAsync($"{_api}/salaries/{Id}");
+                if (message.IsSuccessStatusCode)
+                {
+                    var jstring = await message.Content.ReadAsStringAsync();
+                    Salary salary = JsonConvert.DeserializeObject<Salary>(jstring);
+                    return View(salary);
+                }
+            }
+            return RedirectToAction("Add");
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Update(Salary salary)
+        {
+
+            if (ModelState.IsValid)
+            {
+                var token = HttpContext.Session.GetString("Token");
+                using (HttpClient client = new HttpClient())
+                {
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    var jsondepartment = JsonConvert.SerializeObject(salary);
+                    StringContent content = new StringContent(jsondepartment, Encoding.UTF8, "application/json");
+                    HttpResponseMessage message = await client.PutAsync($"{_api}/salaries", content);
+                    if (message.IsSuccessStatusCode)
+                    {
+                        return RedirectToAction("Index");
+                    }
+                    else
+                    {
+                        return View(salary);
+                    }
+                }
+            }
+            return View(salary);
+        }
+
     }
 }

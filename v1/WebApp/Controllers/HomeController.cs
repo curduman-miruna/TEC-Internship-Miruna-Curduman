@@ -81,13 +81,13 @@ namespace WebApp.Controllers
                     {
                         var jstring = await message.Content.ReadAsStringAsync();
                         var user = JsonConvert.DeserializeObject<RegisterViewModel>(jstring);
-                        return RedirectToAction("Index", "Auth");
+                        return RedirectToAction("Auth", "Home");
                     }
                     else
                     {
                         ModelState.AddModelError(string.Empty, "Invalid registration attempt.");
                     }
-                    return RedirectToAction("Index", "Auth");
+                    return RedirectToAction("Auth", "Home");
                 }
             }
 

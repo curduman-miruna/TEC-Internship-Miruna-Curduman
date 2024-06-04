@@ -10,6 +10,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
+using WebApp.Models.Requests;
 
 namespace WebApp.Controllers
 {
@@ -70,19 +71,41 @@ namespace WebApp.Controllers
             return View(person);
         }
 
-
         [HttpPost]
         public async Task<IActionResult> Add(Person person)
         {
             using (HttpClient client = new HttpClient())
             {
                 var token = HttpContext.Session.GetString("Token");
+                var personRequest = new PersonRequest(person);
                 client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                HttpResponseMessage message = await client.GetAsync($"{_api}/positions/{person.PositionId}");
+                if (message.IsSuccessStatusCode)
+                {
+                    var positionJson = await message.Content.ReadAsStringAsync();
+                    personRequest.Position = JsonConvert.DeserializeObject<Position>(positionJson);
+                }
+
+                message = await client.GetAsync($"{_api}/departments/{personRequest.Position.DepartmentId}");
+                if (message.IsSuccessStatusCode)
+                {
+                    var departmentJson = await message.Content.ReadAsStringAsync();
+                    personRequest.Position.Department = JsonConvert.DeserializeObject<Department>(departmentJson);
+                }
+
+                // Fetch and populate Salary object
+                message = await client.GetAsync($"{_api}/salaries/{person.SalaryId}");
+                if (message.IsSuccessStatusCode)
+                {
+                    var salaryJson = await message.Content.ReadAsStringAsync();
+                    personRequest.Salary = JsonConvert.DeserializeObject<Salary>(salaryJson);
+                }
+
                 if (ModelState.IsValid)
                 {
-                    var jsonPerson = JsonConvert.SerializeObject(person);
+                    var jsonPerson = JsonConvert.SerializeObject(personRequest);
                     StringContent content = new StringContent(jsonPerson, Encoding.UTF8, "application/json");
-                    HttpResponseMessage message = await client.PostAsync($"{_api}/persons", content);
+                    message = await client.PostAsync($"{_api}/persons", content);
                     if (message.IsSuccessStatusCode)
                     {
                         return RedirectToAction("Index");
@@ -125,9 +148,35 @@ namespace WebApp.Controllers
                 {
                     var token = HttpContext.Session.GetString("Token");
                     client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
-                    var jsonperson = JsonConvert.SerializeObject(person);
+
+                    //The correct request content is PersonRequest to avoid error for Department or Position having null methods.
+                    var personRequest = new PersonRequest(person);
+                    client.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+                    HttpResponseMessage message = await client.GetAsync($"{_api}/positions/{person.PositionId}");
+                    if (message.IsSuccessStatusCode)
+                    {
+                        var positionJson = await message.Content.ReadAsStringAsync();
+                        personRequest.Position = JsonConvert.DeserializeObject<Position>(positionJson);
+                    }
+
+                    message = await client.GetAsync($"{_api}/departments/{personRequest.Position.DepartmentId}");
+                    if (message.IsSuccessStatusCode)
+                    {
+                        var departmentJson = await message.Content.ReadAsStringAsync();
+                        personRequest.Position.Department = JsonConvert.DeserializeObject<Department>(departmentJson);
+                    }
+
+                    // Fetch and populate Salary object
+                    message = await client.GetAsync($"{_api}/salaries/{person.SalaryId}");
+                    if (message.IsSuccessStatusCode)
+                    {
+                        var salaryJson = await message.Content.ReadAsStringAsync();
+                        personRequest.Salary = JsonConvert.DeserializeObject<Salary>(salaryJson);
+                    }
+
+                    var jsonperson = JsonConvert.SerializeObject(personRequest);
                     StringContent content = new StringContent(jsonperson, Encoding.UTF8, "application/json");
-                    HttpResponseMessage message = await client.PutAsync($"{_api}/persons", content);
+                    message = await client.PutAsync($"{_api}/persons", content);
                     if (message.IsSuccessStatusCode)
                     {
                         return RedirectToAction("Index");
