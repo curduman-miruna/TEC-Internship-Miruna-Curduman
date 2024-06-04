@@ -11,20 +11,18 @@ Database diagram: <br>
 8. Adding Authentication to the app, you can implement as you please, but to give you some ideas: <br>
 9. Having too much time on your hands? Do any kind of improvements you wish. Just let us know via e-mail once you send the link with your repository what improvements you've done.
     
-V1
-    The user can perform all CRUD (Create, Read, Update, Delete) operations on Person entities. (Tasks: 1, 2, 3)
-    The user can create and update person information. (Tasks: 3, 4 combined)
-    The user can perform all CRUD operations on Salary entities. (Task: 4)
-    The user can perform all CRUD operations on Department entities. (Task: 6)
-    The API port is configured in the appsettings.json file (Task: 7).
-    (Task: 8)
-    Token-based authentication using the Bearer scheme is implemented. A token is generated upon user login, and all operations require authorization (user logged in). 
-    Login and registration functionalities are implemented for Admin users.
+V1 Functionalities
+- CRUD operations for Persons (Tasks: 1, 2, 3)
+- Create and Update Person Information (combines Tasks 3 & 4)
+- CRUD operations for Salaries (Task: 5)
+- CRUD operations for Departments (Task: 6)
+- Configurable API Port (appsettings.json) (Task: 7)
+- Token-based Authentication (Bearer scheme) with Login (all operations require authorization) (Task: 8)
+- Login and Registration for Admin users
 
-V2 (Improvements over V1)
-    (Task 9)
-    Combined the Person and Person Details tables as they represent the same entity.
-    Streamlined Admin information by keeping only necessary fields.
-    Implemented logout functionality for Admin users.
-    Added logging for the API application.
+V2 Functionalities (Improvements over V1)
+- Combined Person and Person Details tables.
+- Streamlined Admin information (only necessary fields).
+- Implemented Admin user logout.
+- Added logging for the API application.
 
