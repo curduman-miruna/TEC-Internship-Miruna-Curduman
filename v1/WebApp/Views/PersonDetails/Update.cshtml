@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "Update";
+}
+
+@model PersonDetails
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+<h1>@ViewData["Title"]</h1>
+
+<form method="post" asp-action="Update" id="personDetailsForm">
+    <input type="hidden" asp-for="Person.Id" value="@Model.Person.Id" />
+    <input type="hidden" asp-for="Person.Age" value="@Model.Person.Age" />
+    <input type="hidden" asp-for="Person.Email" value="@Model.Person.Email" />
+    <input type="hidden" asp-for="Person.Address" value="@Model.Person.Address" />
+    <input type="hidden" asp-for="Person.PositionId" value="@Model.Person.PositionId" />
+    <input type="hidden" asp-for="Person.SalaryId" value="@Model.Person.SalaryId" />
+
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="Person.Name">Name</label>
+            <input type="text" asp-for="Person.Name" class="form-control" value="@Model.Person.Name" readonly />
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="Person.Surname">Surname</label>
+            <input type="text" asp-for="Person.Surname" class="form-control" value="@Model.Person.Surname" readonly />
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+            <label asp-for="BirthDay">BirthDay</label>
+            <input type="date" asp-for="BirthDay" class="form-control" />
+            <span asp-validation-for="BirthDay" class="text-danger"></span>
+        </div>
+        <div class="col-md-4 mb-3">
+            <label asp-for="PersonCity">PersonCity</label>
+            <input type="text" asp-for="PersonCity" class="form-control" />
+            <span asp-validation-for="PersonCity" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-row">
+        <div class="col-md-4 mb-3">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        </div>
+    </div>
+    <button type="submit" class="btn btn-primary">Save</button>
+    <a asp-action="Index" asp-controller="Person" class="btn btn-secondary">Back to List</a>
+</form>

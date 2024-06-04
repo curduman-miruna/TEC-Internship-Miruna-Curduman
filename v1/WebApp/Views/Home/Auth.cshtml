@@ -1,0 +1,65 @@
+﻿@model WebApp.Models.AuthViewModel
+
+@{
+    ViewData["Title"] = "Authentication";
+}
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-6">
+            <h2>Login</h2>
+            <form asp-action="Login" method="post">
+                <div class="form-group">
+                    <label asp-for="Login.Email" class="control-label"></label>
+                    <input asp-for="Login.Email" class="form-control" />
+                    <span asp-validation-for="Login.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Login.Password" class="control-label"></label>
+                    <input asp-for="Login.Password" class="form-control" />
+                    <span asp-validation-for="Login.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Login</button>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-6">
+            <h2>Register</h2>
+            <form asp-action="Register" method="post">
+                <div class="form-group">
+                    <label asp-for="Register.Name" class="control-label"></label>
+                    <input asp-for="Register.Name" class="form-control" />
+                    <span asp-validation-for="Register.Name" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Register.Surname" class="control-label"></label>
+                    <input asp-for="Register.Surname" class="form-control" />
+                    <span asp-validation-for="Register.Surname" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Register.Email" class="control-label"></label>
+                    <input asp-for="Register.Email" class="form-control" />
+                    <span asp-validation-for="Register.Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Register.Password" class="control-label"></label>
+                    <input asp-for="Register.Password" class="form-control" />
+                    <span asp-validation-for="Register.Password" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Register.ConfirmPassword" class="control-label"></label>
+                    <input asp-for="Register.ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="Register.ConfirmPassword" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Register</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
